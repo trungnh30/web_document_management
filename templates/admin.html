@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/dashboard.css">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+    <meta name="robots" content="NONE,NOARCHIVE">
+</head>
+<body class=" dashboard" data-admin-utc-offset="25200">
+
+<!-- Container -->
+<div id="container">
+    <!-- Content -->
+    <div id="content" class="colMS">
+        <h1>Quản lý người dùng</h1>
+            <div id="content-main">
+                <div class="app-auth module">
+                <table>
+                <caption>
+                    <a href="/admin/auth/" class="section" title="Models in the Authentication and Authorization application">Authentication and Authorization</a>
+                </caption>
+                    <tbody><tr class="model-group">
+                        <th scope="row"><a href="/admin/auth/group/">Groups</a></th>
+                        <td><a href="/admin/auth/group/add/" class="addlink">Add</a></td>
+                        <td><a href="/admin/auth/group/" class="changelink">Change</a></td>
+                    </tr>
+                    <tr class="model-user">
+                        <th scope="row"><a href="/admin/auth/user/">Users</a></th>
+                        <td><a href="/admin/auth/user/add/" class="addlink">Add</a></td>
+                        <td><a href="/admin/auth/user/" class="changelink">Change</a></td>
+                    </tr>
+                </tbody></table>
+                </div>
+                <div class="app-testlist module">
+                <table>
+                <caption>
+                    <a href="/admin/testlist/" class="section" title="Models in the Testlist application">Testlist</a>
+                </caption>
+                    <tbody><tr class="model-danhmucloi">
+                        <th scope="row"><a href="/admin/testlist/danhmucloi/">Danh muc lois</a></th>
+                        <td><a href="/admin/testlist/danhmucloi/add/" class="addlink">Add</a></td>
+                        <td><a href="/admin/testlist/danhmucloi/" class="changelink">Change</a></td>
+                    </tr>
+                    <tr class="model-hdcv">
+                        <th scope="row"><a href="/admin/testlist/hdcv/">Hdcvs</a></th>
+                        <td><a href="/admin/testlist/hdcv/add/" class="addlink">Add</a></td>
+                        <td><a href="/admin/testlist/hdcv/" class="changelink">Change</a></td>
+                    </tr>
+                    <tr class="model-mang">
+                        <th scope="row"><a href="/admin/testlist/mang/">Mangs</a></th>
+                        <td><a href="/admin/testlist/mang/add/" class="addlink">Add</a></td>
+                        <td><a href="/admin/testlist/mang/" class="changelink">Change</a></td>
+                    </tr>
+                </tbody></table>
+                </div>
+            </div>
+            <div id="content-related">
+                <div class="module" id="recent-actions-module">
+                    <h2>Recent actions</h2>
+                    <h3>My actions</h3>
+                        <ul class="actionlist">
+                        <li class="changelink">
+                                <a href="/admin/auth/user/2/change/">Viet</a>
+                            <br>
+                                <span class="mini quiet">User</span>
+                        </li>
+                        <li class="addlink">
+                                <a href="/admin/auth/user/2/change/">Viet</a>
+                            <br>
+                                <span class="mini quiet">User</span>
+                        </li>
+                        </ul>
+                </div>
+            </div>
+            <br class="clear">
+    </div>
+</div>
+<!-- END Container -->
+</body>
+{% endblock %}

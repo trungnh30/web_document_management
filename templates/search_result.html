@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<body style="color: black">
+	<h1><b>Search</b></h1>
+	    {% for s in document_results %}
+			<div class="row">
+				<div class="col-12">
+					<b style="font-size: 20px">Hàng đây nha 🐱:  </b> <a style="color: blue" href="/media/{{ s.title }}.pdf">{{s.title}}</a>
+				</div>
+			</div>
+		{% empty %} 
+ 			<h1><b>Hổng thấy mà... 🙈 </b></h1>
+	 	{% endfor %}
+	    {% for f in folder_results %}
+			<div class="row">
+				<div class="col-12">
+					<b style="font-size: 20px">Hàng đây nha 🐱:  </b> <a style="color: blue">{{f.ten_Folder}}</a>
+				</div>
+			</div>
+		{% empty %}
+ 			<h1><b>Hổng thấy mà... 🙈 </b></h1>
+	 	{% endfor %}
+</body>
+{% endblock  %}

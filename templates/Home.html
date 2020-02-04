@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="wrapper wrapper-content  animated fadeInRight" style="height: calc(100% - 115px);">
+    <div class="row" style="height: 100%;">
+        <div class="col-lg-6" style="margin-top: 0px;">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5> Biểu đồ </h5>
+                </div>
+                <div class="ibox-content1" style="height: calc(100% - 45px);">
+
+                    <canvas id="myChart" width="500" height="500"></canvas>
+                    </div>
+            </div>
+        </div>
+            <div class="col-lg-6">
+                <div class="ibox-title">
+                    <h5> Chúng ta </h5>
+                </div>
+                <div class="ibox-content2">
+                    <iframe src="http://chungta.vn/" width="100%;" height="100%;" frameborder="1"></iframe>
+                </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+body {
+  background-color: #a3d5d3;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ["STQT Chất lượng", "STQT Giám sát hệ thống", "STQT Khôi phục dịch vụ", "STQT Phát triển công cụ", "STQT Triển khai dịch vụ", "STQT VOIP", "STQT Đào tạo", "Khác"],
+    datasets: [{
+      label: 'Thống kê SL Tài liệu',
+      data: [12, 20, 3, 5, 2, 3, 20, 3],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: false,
+    scales: {
+      xAxes: [{
+        ticks: {
+          maxRotation: 90,
+          minRotation: 80
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+});
+</script>
+{% endblock %}

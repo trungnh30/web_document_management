@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block content %}
+{% comment %} {% if user.is_authenticated %} {% endcomment %}
+{% comment %} <div style="background-color: #16435d;"> {% endcomment %}
+ <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>Tài liệu cần xóa</h2>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <strong>Tài liệu cần xóa</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>Tài liệu cần xóa</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#" class="dropdown-item">Config option 1</a>
+                                </li>
+                                <li><a href="#" class="dropdown-item">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="color: #115252;">
+
+                        <div class="table-responsive">
+
+<div>
+
+    {% block content_header %}
+    <!-- <meta http-equiv="refresh" content="10"> -->
+    <!-- <h2>Tài Liệu Tới Hạn Review</h2> -->
+    <h1>Garbage</h1>
+    {% endblock %}
+    <table class="table mb-1">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên Tài Liệu</th>
+                <th>Người Tạo</th>
+                <th>Ngày Upload</th>
+                <th>Ngay BH</th>
+                <th>Ngay TH</th>
+            </tr>
+        </thead>
+        {% csrf_token %}
+        {% comment %} <input class = "btn btn-danger" type="submit" name="restore" value="Restore File"> {% endcomment %}
+        {% for z in TL_bin %}
+            <tr>
+                <td>{{z.0}}</td>
+                <td><a href="{{ z.1.pdf.url }}" class="btn btn-primary btn-sm" target="_blank">{{z.1.pdf}}</a></td>
+                <td>{{z.1.ten}}</td>
+                <td>{{z.1.date}}</td>
+                <td>{{z.1.banhanh}}</td>
+                <td>{{z.1.toihan}}</td>
+                <td>
+                    <form method="post" action="{% url 'trash' %}">
+                        {% csrf_token %}
+                        <!-- <input type="submit" class="btn btn-primary" value="{{z.1.number}}" name="Update"> -->
+                        <button name="delete" type="submit" class="btn btn-primary" value="{{z.1.id}}">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'trash' %}">
+                        {% csrf_token %}
+                        <!-- <input type="submit" class="btn btn-primary" value="{{z.1.number}}" name="Update"> -->
+                        <button name="restore" type="submit" class="btn btn-primary" value="{{z.1.id}}">Restore</button>
+                    </form>
+                </td> 
+            </tr>
+        {% endfor %}
+        {% for z in Update_bin %}
+            <tr>
+                <!-- <td>{{z.0}}</td> -->
+                <td>{{z.1.number}}</td>
+                <td><a href="{{ z.1.pdf.url }}" class="btn btn-primary btn-sm" target="_blank">{{z.1.filename}}</a></td>
+                <td>{{z.1.ten}}</td>
+                <td>{{z.1.date}}</td>
+                <td>{{z.1.banhanh}}</td>
+                <td>{{z.1.toihan}}</td>
+                <td>
+                    <form method="post" action="{% url 'trash' %}">
+                        {% csrf_token %}
+                        <!-- <input type="submit" class="btn btn-primary" value="{{z.1.number}}" name="Update"> -->
+                        <button name="delete_update" type="submit" class="btn btn-primary" value="{{z.1.id}}">Delete</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'trash' %}">
+                        {% csrf_token %}
+                        <button name="restore_update" type="submit" class="btn btn-primary" value="{{z.1.id}}">Restore</button>
+                    </form>
+                </td> 
+            </tr>
+        {% endfor %}
+
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+<script>
+        $(document).ready(function(){
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+{% comment %} {% else %}
+<h3>You are not logged in</h3>
+{% endif%} {% endcomment %}
+
+{% endblock  %}

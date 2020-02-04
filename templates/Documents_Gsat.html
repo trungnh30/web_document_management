@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block content %}
+
+<style>
+    body {
+        font-family: 'Lato', sans-serif;
+    }
+
+    .overlay {
+        height: 180%;
+        width: 145%;
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        bottom: 20px;
+        left: 0;
+        transform: translate(-25%, 8%);
+        background-color: #000000c7;
+    }
+
+    .overlay-content {
+        position: relative;
+        top: 35%;
+        left: 40%;
+        width: 22%;
+        height: fit-content;
+        background-color: white;
+        text-align: left;
+    }
+
+    .overlay a {
+        text-decoration: none;
+    }
+
+    .overlay a:hover, .overlay a:focus {
+        
+    }
+
+    .overlay .closebtn {
+        margin-right: 10px;
+        font-size: 25px;
+        color: black;
+        float: right;
+    }
+
+    @media screen and (max-height: 450px) {
+        .overlay a {font-size: 20px}
+        .overlay .closebtn {
+            font-size: 40px;
+            top: 15px;
+            right: 35px;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    <!-- Open popup -->
+    function openUpload_popup(obj) {
+        var dml = ($(obj).attr('id'));
+        var mang = $('.tab-pane.fade.active.show').attr('id');
+        document.getElementById("myNav_" + mang).style.display = "block";
+	    const val = obj.id;
+        $("#id_id_folder option").each(function(i){
+            if($(this).val() == val)
+                $(this).attr("selected","selected");
+            else
+                $(this).attr("disabled","disabled");
+        });
+
+        $("#id_mang option").each(function(i){
+            if($(this).val() == mang)
+                $(this).attr("selected","selected");
+            else
+                $(this).attr("disabled","disabled");
+        });
+    };
+    <!-- Close popup -->
+    function closeUpload_popup() {
+        var mang = $('.tab-pane.fade.active.show').attr('id');
+        document.getElementById("myNav_" + mang).style.display = "none";
+    };
+</script>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Danh Mục Lỗi</h2>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{%url 'Hôm'%}">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a>STQT Giám sát Hệ thống</a>
+            </li>
+
+            <li class="breadcrumb-item">
+                <a>Hướng dẫn công việc</a>
+            </li>
+            <li class="breadcrumb-item active">
+                <strong>Danh mục cảnh báo</strong>
+            </li>
+        </ol>
+
+    </div>
+</div>
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row" style="height: 100%;">
+        <div class="col-lg-6" style="background-color: #ced7dc; padding-bottom: 25px;">
+            <div class="tabs-container" style="height: 100%;">
+                <!-- TAB -->
+                <ul class="nav nav-tabs">
+                    {% for mang in folder_mang %}
+                    <li class="nav-item">
+                        <a class="nav-link" role="tab" data-toggle="tab" href="#{{ mang.ten_Folder.split|join:'' }}" >
+                            {{ mang.ten_Folder }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <!-- TAB panels -->
+                <div class="tab-content" style="height: calc(100% - 80px);">
+                    {% for mang in folder_mang %}
+                    <div role="tabpanel" id="{{ mang.ten_Folder.split|join:'' }}" class="tab-pane fade" style="height: 100%;">
+                        <div class="panel-body" style="height: 100%;">
+                            <fieldset style="height: 100%;">
+                                <div class="ibox ">
+                                    <div class="ibox-content" style="height: 100%;">
+                                    {% block content2 %}
+                                        <div class="dd" id="nestable2">
+                                            <ol class="dd-list " >  
+                                                {% for key, value in errors.items %}
+                                                    {% if key.ten_Folder == mang.ten_Folder %}
+                                                    {% for v in value %}
+                                                <li class="dd-item" data-id="1">
+                                                    <div class="dd-handle2">
+                                                            <span class="label label-info"><i class="fa fa-users"></i></span>
+                                                            <span style="cursor:pointer;color: white;">
+                                                                <!-- Nút upload file -> upload popup -->
+                                                                <a href='#' id="{{ v.0 }}" name="upload_tlhh" style="float: right;padding: 0 4px 0 7px;" class="btn btn-success" type="button" onclick="openUpload_popup(this)">
+                                                                    <i class="fa fa-upload"></i>&nbsp;
+                                                                </a>
+                                                            </span>
+                                                            <!-- Upload popup-->
+                                                            <div id="myNav_{{ mang.ten_Folder.split|join:'' }}" class="overlay">
+                                                                <div class="overlay-content">
+                                                                    <div style="height: 40px;clear: both;border-bottom: 1px solid;color: white;background-color: #115252;">
+                                                                        <h2 style="float: left; margin-left: 10px;"> Upload</h2>
+                                                                    <a href="javascript:void(0)" class="closebtn" onclick="closeUpload_popup()">&times;</a>
+                                                                    </div>
+                                                                    <div style="height: 89%;margin-top: 15px;background-color: white; margin-left: 0px;">
+                                                                        <div style="color: black">
+                                                                            <form method="post" action="{% url 'new_docs' %}" enctype="multipart/form-data">
+                                                                            {% csrf_token %}
+                                                                                {% for field in form %}
+                                                                                    <div class="col-lg-12">
+                                                                                        <div class="control-group"><label class = "control-label">{{field.label}}
+                                                                                            {% if field.field.required %}
+                                                                                                </label><span class="required"> * </span> 
+                                                                                            {% endif %}
+                                                                                            {% render_field field class="form-control required" %}
+                                                                                        </div>
+                                                                                    </div> 
+                                                                                {% endfor %}
+                                                                            <button style="margin-left: calc(100% - 107px);margin-bottom: 10px;" type="submit" name="Upload" class="btn btn-primary">Upload File</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {{ v.1 }}
+                                                    </div>
+                                                    {% for e in document %}
+                                                        {% if e.id_folder_id == v.0 %}
+                                                    <ol class="dd-list collapse" >
+                                                        <li class="dd-item" data-id="2">
+                                                            <div class="dd-handle2">
+                                                                <!-- Nút xóa tài liệu -->
+                                                                 <span style="float:right; padding: 2px 5px 5px 25px;" class="infont ">
+                                                                    <a href={% url 'remove_tlhh' e.id %}><i style="color:#f8ac59;" class="fa fa-trash" onclick="return confirm('Are you sure?');"></i></a>
+                                                                </span> 
+                                                                <p style="margin-bottom: 5px;"><span class="label label-warning"><i class="fa fa-users"></i></span>  <span> <a  data-toggle="modal" href="#{{e.id}}">{{e.pdf}}</a></span></p>
+                                                                    <div class="modal inmodal" id="{{e.id}}" tabindex="-1" role="dialog" aria-hidden="true" style="padding: 5px;padding-right: 18px;">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content animated bounceInRight">
+                                                                            <div class="modal-header">
+                                                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                                <small class="font-bold">{{e.pdf}}</small>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="wrapper-modal wrapper-content-modal  animated fadeInRight" style="height:100%">
+                                                                                    <div class="row" style="height:100%">
+                                                                                        <div class="col-lg-9" style="height:100%; max-height: 100%;" >
+                                                                                        <div class="ibox-content-figure">
+                                                                                            <figure style="height:100%" >
+                                                                                                <iframe width="100%" height="100%" src="/media/{{e.pdf}}.pdf" frameborder="0" allowfullscreen></iframe>
+                                                                                            </figure>
+                                                                                        </div>
+                                                                                        </div>
+                                                                                        <div class="col-lg-3">
+                                                                                            <div class="ibox-right ">
+                                                                                                <div class="ibox-title-modal">
+                                                                                                    <h3>Thông tin tài liệu</h3>
+                                                                                                </div>
+                                                                                                <div class="ibox-content-modal">
+                                                                                                    <ul>
+                                                                                                        <li>Mã tài liệu: 15-HD/GS/HDCV/SCC</li>
+                                                                                                        <li>{{e.pdf}}</li>
+                                                                                                        <li>Phiên bản: 1/0</li>
+                                                                                                        <li>Ngày ban hành: 31/10/2017</li>
+                                                                                                        <li>Ngày hiệu lực: 14/11/2017</li>
+                                                                                                        <li>Ngày đến hạn</li>
+
+                                                                                                        <a class="btn btn-primary" data-toggle="modal" href="#-{{e.id}}"> Tài liệu liên quan</a>
+                                                                                                        <div class="modal inmodal" id="-{{e.id}}" data-backdrop="static">
+                                                                                                            <div class="modal-dialog2" style="position: absolute; left: 40%; top: 40%; transform: translate(-50%, -50%);">
+                                                                                                                <div class="modal-content2 animated ">
+                                                                                                                    <div class="modal-header2">
+
+                                                                                                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                                                                                        <h4 class="modal-title2">Tài liệu liên quan</h4>
+                                                                                                                    </div>
+                                                                                                                    <div class="modal-body2">
+                                                                                                                            <ol class="dd-list">
+                                                                                                                            <li class="dd-item" data-id="2">
+                                                                                                                                <div class="dd-handle2" style="background: #110625;">
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-bolt"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;"> {{e.pdf}} </a></p>
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-bolt"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;"> 1.20qtmvt21-MTQT giam sat ha tang mang</a></p>
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-bolt"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;"> 1.8.1hdmvt20-HDCV Quy trinh xu ly su co ha tang mang vien thong</a></p>
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-bomb"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;"> 03hdcc10-HDCV Sử dụng công cụ SecureCRT để truy nhập thiết bị từ xa</a></p>
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-child"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;"> 3.12hdmvt10-HDCV Giám sát cảnh báo lỗi trên hạ tầng MPLS</a></p>
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-bomb"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;"> 02qtcl10-MTQT Ban hanh, sua doi tai lieu noi bo</a></p>
+                                                                                                                                    <p><span class="label label-info"><i class="fa fa-child"></i></span> <a href="http://127.0.0.1:8000/media/23hdgs10-HDCV phát hiện và kiểm tra cảnh báo FAN trên thiết bị Access.pdf" style="color:white;" > 01qdcl10-Quy dinh Ghi ma so tai lieu noi bo SCC </a></p>
+
+                                                                                                                                </div>
+                                                                                                                            </li>
+                                                                                                                            </ol>
+
+                                                                                                                    </div>
+                                                                                                                    <div class="modal-footer2">
+                                                                                                                        <button type="button" class="btn btn-white" data-dismiss="modal" style="margin-left: 10px;">Close</button>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+
+                                                                                                    </ul>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    </div>
+                                                            </div>
+                                                        </li>
+                                                    </ol>
+                                                        {% endif %}
+                                                    {% endfor %} 
+                                                </li>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                {% endfor %} 
+                                            </ol> 
+                                        </div>
+                                    {% endblock %}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6" style="margin-top: 0px; padding-right: 0;">
+            <div class="ibox2 " style="height: 100%;clear: both;">
+                <div class="ibox-title" >
+                    <h5>CHÚNG TA </h5>
+                </div>
+                <div class="ibox-content2" style="clear: both;height: calc(100% - 48px);">
+                    <iframe src="https://chungta.vn/" style="width:100%; height:100%; frameborder:1;" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

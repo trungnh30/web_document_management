@@ -1,0 +1,39 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="upload-form" style="color: black">
+  <form id="js-form" data-url = "{% url 'get_folder_lv1' %}" method="post" enctype="multipart/form-data">
+  <h2 style>Upload File</h2>
+    {% csrf_token %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-primary">Upload File</button>
+  </form>
+</div>    
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $("select[name=root]").change(function(){
+        var root_id = $(this).val();
+        var request_url = $("#js-form").attr("data-url");
+        $.ajax({
+            url: request_url,
+            data: {
+                'root': root_id
+            },
+            success: function(data){
+                $.each(data, function(index, text){
+                    $("select[name=folder_1]").append(
+                        $('<option></option>').val(index).html(text)
+                    );
+                });
+            }
+        });
+        return false;
+    });
+});
+</script>
+{% endblock scripts %}
