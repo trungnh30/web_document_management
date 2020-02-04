@@ -1,4 +1,4 @@
-WEB CHO PHASE 3 DỰ ÁN QUY HOẠCH TÀI LIỆU CỦA TRUNG TÂM SCC
+WEB CHO PHASE 3 DỰ ÁN QUY HOẠCH TÀI LIỆU
 
 1. FEATURES :
   - Quản lý người dùng + phân quyền người dùng theo STQT
